@@ -1,4 +1,4 @@
-package com.hello.kaiser.homework.model;
+package com.hello.kaiser.homework.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -6,26 +6,27 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hello.kaiser.homework.model.config.ConfigManager;
+import com.hello.kaiser.homework.model.MyBackupService;
+import com.hello.kaiser.homework.model.schedule.SchedulesManager;
 import com.hello.kaiser.homework.tool.CommunicationManager;
 import com.hello.kaiser.homework.tool.RequestData;
-import com.hello.kaiser.homework.model.Config;
-import com.hello.kaiser.homework.model.ConfigManager;
-import com.hello.kaiser.homework.model.SchedulesManager;
 import com.loopj.android.http.TextHttpResponseHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "MainActivity";
+    //畫面元件
     private TextView show;
-    List<Config> dataList = new ArrayList<>();
+
     //api網址
-    String mConfigUrl = "http://www.mocky.io/v2/59e6d2c00f00007704ee97b6";
-    String mSchedules = "http://www.mocky.io/v2/59e6e7550f00005305ee97e6";
+//    String mConfigUrl = "http://www.mocky.io/v2/59e6d2c00f00007704ee97b6";
+//    String mSchedules = "http://www.mocky.io/v2/59e6e7550f00005305ee97e6";
+
+    //參數
+//    List<Config> dataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSet() {
-        loadingConfig(mConfigUrl);
-        loadingSchedules(mSchedules);
+//        loadingData(mConfigUrl);
+//        loadingSchedules(mSchedules);
+
+        MyBackupService myBackupService = new MyBackupService();
+        Log.d(TAG, "checkpoint - " + myBackupService.ProgressJsonConfigs());
+        Log.d(TAG, "checkpoint - " + myBackupService.ProgressJsonConfigs().get(0));
+
+        ConfigManager configManager = (ConfigManager) myBackupService.ProgressJsonConfigs().get(0);
+        Log.d(TAG, "checkpoint - " + configManager.ProcessJsonConfig(this));
     }
+
 
     private void loadingConfig(String url) {
         //參數
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.d(TAG, " onSuccess " + responseString.toString());
                 SchedulesManager getJsonFirst = CommunicationManager.covertObj(responseString, SchedulesManager.class);
-
+                Log.d(TAG, "確認Manager有抓取到東西 = " + getJsonFirst.getSchedules().get(0).getTime());
             }
 
             @Override
